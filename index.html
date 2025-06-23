@@ -1,51 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Patient Appointment Request</title>
+  <title>Schedule an Appointment</title>
 </head>
 <body>
-  <h2>Request an Appointment</h2>
-  <form id="intake-form">
+  <h2>Appointment Request</h2>
+
+  <form id="appointment-form">
     <label for="name">Full Name:</label><br />
     <input type="text" id="name" name="name" required><br /><br />
 
     <label for="phone">Phone Number:</label><br />
     <input type="tel" id="phone" name="phone" required><br /><br />
 
-    <label for="reason">Reason for Appointment:</label><br />
+    <label for="date">Choose a Date:</label><br />
+    <input type="date" id="date" name="date" required><br /><br />
+
+    <label for="time">Available Time Slots:</label><br />
+    <select id="time" name="time" required>
+      <option value="">Select a time</option>
+    </select><br /><br />
+
+    <label for="reason">Reason or Notes:</label><br />
     <textarea id="reason" name="reason" required></textarea><br /><br />
 
-    <label for="datetime">Preferred Date & Time:</label><br />
-    <input type="datetime-local" id="datetime" name="datetime" required><br /><br />
-
-    <button type="submit">Submit</button>
+    <button type="submit">Submit Request</button>
   </form>
 
   <p id="status"></p>
 
   <script>
-    document.getElementById("intake-form").addEventListener("submit", function(e) {
+    const form = document.getElementById("appointment-form");
+    const dateInput = document.getElementById("date");
+    const timeSelect = document.getElementById("time");
+
+    const WEB_APP_URL = "YOUR_WEB_APP_URL"; // 👈 Replace with your Apps Script URL
+
+    dateInput.addEventListener("change", () => {
+      const selectedDate = dateInput.value;
+      timeSelect.innerHTML = '<option value="">Loading...</option>';
+
+      fetch(`${WEB_APP_URL}?date=${selectedDate}`)
+        .then(res => res.json())
+        .then(times => {
+          if (times.length === 0) {
+            timeSelect.innerHTML = '<option value="">No available slots</option>';
+          } else {
+            timeSelect.innerHTML = '<option value="">Select a time</option>';
+            times.forEach(time => {
+              const option = document.createElement("option");
+              option.value = time;
+              option.textContent = time;
+              timeSelect.appendChild(option);
+            });
+          }
+        })
+        .catch(() => {
+          timeSelect.innerHTML = '<option value="">Error loading times</option>';
+        });
+    });
+
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const form = e.target;
       const data = {
         name: form.name.value,
         phone: form.phone.value,
+        datetime: `${form.date.value} ${form.time.value}`,
         reason: form.reason.value,
-        datetime: form.datetime.value,
+        type: "Appointment Request"
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbxJsG6p_h0kdIyebRbqhkg0u6e5WC6fM3hFhpb3-GKs1UHBjBRNnM1hCH4d2WoRLPof/exec", {
+      fetch(WEB_APP_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
       });
 
-      document.getElementById("status").innerText = "Submitted! Thank you.";
+      document.getElementById("status").textContent = "Submitted! Thank you.";
       form.reset();
+      timeSelect.innerHTML = '<option value="">Select a time</option>';
     });
   </script>
 </body>
 </html>
+
