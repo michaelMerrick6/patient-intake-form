@@ -34,11 +34,11 @@
         datetime: form.datetime.value,
       };
 
-      fetch('YOUR_WEB_APP_URL', {
-        method: 'POST',
-        mode: 'no-cors',
+      fetch("PASTE_YOUR_WEB_APP_URL_HERE", {
+        method: "POST",
+        mode: "no-cors",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
@@ -49,4 +49,3 @@
   </script>
 </body>
 </html>
-
