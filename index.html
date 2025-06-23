@@ -1,28 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Schedule an Appointment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f6f8fa;
+      padding: 40px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select, textarea, button {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 25px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #status {
+      margin-top: 20px;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
+
   <h2>Appointment Request</h2>
 
   <form id="appointment-form">
-    <label for="name">Full Name:</label><br />
-    <input type="text" id="name" name="name" required><br /><br />
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" name="name" required />
 
-    <label for="phone">Phone Number:</label><br />
-    <input type="tel" id="phone" name="phone" required><br /><br />
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required />
 
-    <label for="date">Choose a Date:</label><br />
-    <input type="date" id="date" name="date" required><br /><br />
+    <label for="date">Choose a Date:</label>
+    <input type="date" id="date" name="date" required />
 
-    <label for="time">Available Time Slots:</label><br />
+    <label for="time">Available Time Slots:</label>
     <select id="time" name="time" required>
       <option value="">Select a time</option>
-    </select><br /><br />
+    </select>
 
-    <label for="reason">Reason or Notes:</label><br />
-    <textarea id="reason" name="reason" required></textarea><br /><br />
+    <label for="reason">Reason or Notes:</label>
+    <textarea id="reason" name="reason" rows="4" required></textarea>
 
     <button type="submit">Submit Request</button>
   </form>
@@ -34,7 +91,7 @@
     const dateInput = document.getElementById("date");
     const timeSelect = document.getElementById("time");
 
-    const WEB_APP_URL = "YOUR_WEB_APP_URL"; // 👈 Replace with your Apps Script URL
+    const WEB_APP_URL = "YOUR_WEB_APP_URL"; // 👈 Replace with your actual Apps Script URL
 
     dateInput.addEventListener("change", () => {
       const selectedDate = dateInput.value;
@@ -84,4 +141,3 @@
   </script>
 </body>
 </html>
-
