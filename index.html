@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Schedule an Appointment</title>
+  <title>Appointment Request</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,7 +32,7 @@
       color: #333;
     }
 
-    input, select, textarea, button {
+    input, textarea, button {
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
@@ -70,13 +70,8 @@
     <label for="phone">Phone Number:</label>
     <input type="tel" id="phone" name="phone" required />
 
-    <label for="date">Choose a Date:</label>
-    <input type="date" id="date" name="date" required />
-
-    <label for="time">Available Time Slots:</label>
-    <select id="time" name="time" required>
-      <option value="">Select a time</option>
-    </select>
+    <label for="datetime">Preferred Date & Time:</label>
+    <input type="text" id="datetime" name="datetime" placeholder="e.g. June 25 at 10:00 AM" required />
 
     <label for="reason">Reason or Notes:</label>
     <textarea id="reason" name="reason" rows="4" required></textarea>
@@ -88,61 +83,28 @@
 
   <script>
     const form = document.getElementById("appointment-form");
-    const dateInput = document.getElementById("date");
-    const timeSelect = document.getElementById("time");
 
-    // ✅ Your Apps Script URL (LIVE version from deployment)
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxJsG6p_h0kIdyebRbqhk9u6e5WC6fM3hFhpb3-GKs1UHbjBRNnM1hCHd4d2W/exec";
-
-    // Load available times when date is selected
-    dateInput.addEventListener("change", () => {
-      const selectedDate = dateInput.value;
-      timeSelect.innerHTML = '<option value="">Loading...</option>';
-
-      fetch(`${WEB_APP_URL}?date=${selectedDate}`)
-        .then(res => res.json())
-        .then(times => {
-          if (times.length === 0) {
-            timeSelect.innerHTML = '<option value="">No available slots</option>';
-          } else {
-            timeSelect.innerHTML = '<option value="">Select a time</option>';
-            times.forEach(time => {
-              const option = document.createElement("option");
-              option.value = time;
-              option.textContent = time;
-              timeSelect.appendChild(option);
-            });
-          }
-        })
-        .catch((err) => {
-          console.error("Error fetching times:", err);
-          timeSelect.innerHTML = '<option value="">Error loading times</option>';
-        });
-    });
-
-    // Submit the form to your Google Apps Script
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
       const data = {
         name: form.name.value,
         phone: form.phone.value,
-        datetime: `${form.date.value} ${form.time.value}`,
+        datetime: form.datetime.value,
         reason: form.reason.value,
         type: "Appointment Request"
       };
 
-      fetch(WEB_APP_URL, {
+      fetch("https://script.google.com/macros/s/PASTE_YOUR_DEPLOYED_WEBAPP_URL_HERE/exec", {
         method: "POST",
-        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
 
       document.getElementById("status").textContent = "Submitted! Thank you.";
       form.reset();
-      timeSelect.innerHTML = '<option value="">Select a time</option>';
     });
   </script>
+
 </body>
 </html>
